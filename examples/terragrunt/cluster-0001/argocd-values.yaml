@@ -1,0 +1,27 @@
+nameOverride: argocd
+crds:
+  keep: false
+global:
+  additionalLabels:
+    fargate_ready: "true"
+  domain: argo-infra.X.Z.com
+
+configs:
+  params:
+    server.insecure: true
+server:
+  logLevel: info
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+  ingress:
+    enabled: true
+    ingressClassName: external-ingress
+repoServer:
+  replicas: 1
+  logLevel: info
+  resources:
+    requests:
+      cpu: 500m
+      memory: 64Mi

@@ -1,0 +1,39 @@
+applications:
+  ${app_name}:
+    namespace: ${namespace}
+    additionalLabels:
+      app.kubernetes.io/managed-by: terragrunt
+    finalizers:
+      - resources-finalizer.argocd.argoproj.io
+    project: cluster-addons
+    source:
+      repoURL: ${repoURL}
+      targetRevision: ${targetRevision}
+      path: ${path}
+      directory:
+        recurse: true
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: ${namespace}
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - ApplyOutOfSyncOnly=true
+projects:
+  ${project_name}:
+    namespace: ${namespace}
+    additionalLabels:
+      app.kubernetes.io/managed-by: terragrunt
+    finalizers:
+      - resources-finalizer.argocd.argoproj.io
+    description: Cluster addons
+    sourceRepos:
+      - '*'
+    destinations:
+      - namespace: '*'
+        server: https://kubernetes.default.svc
+    clusterResourceWhitelist:
+      - group: '*'
+        kind: '*'
